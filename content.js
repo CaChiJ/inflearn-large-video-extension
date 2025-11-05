@@ -1,7 +1,8 @@
 // 기본 설정값
 const DEFAULT_SETTINGS = {
   enabled: true,
-  zoomLevel: 105
+  zoomLevel: 105,
+  hideFooter: true
 };
 
 let currentSettings = { ...DEFAULT_SETTINGS };
@@ -19,8 +20,9 @@ function applyShakaVideoStyles(settings) {
   
   videos.forEach(video => {
     video.style.position = 'relative';
-    video.style.left = `-${offset}%`;
+    video.style.left = '50%';
     video.style.top = `-${offset}%`;
+    video.style.transform = 'translateX(-50%)';
     video.style.width = `${zoomPercent}%`;
     video.style.height = `${zoomPercent}%`;
     video.dataset.enlargerApplied = 'true';
@@ -33,7 +35,54 @@ function applyShakaVideoStyles(settings) {
     container.dataset.paddingApplied = 'true';
   });
   
+  // Footer 숨김 처리
+  applyFooterVisibility(settings.hideFooter);
+  
   console.log(`Inflearn Video Enlarger: Styles applied (${zoomPercent}%)`);
+}
+
+// Footer 표시/숨김 처리 함수
+function applyFooterVisibility(hideFooter) {
+  const footer = document.querySelector('footer[aria-label="영상 하단 컨테이너"]');
+  const playerContainer = document.getElementById('player-container');
+  
+  if (hideFooter) {
+    // Footer 숨기기
+    if (footer) {
+      footer.style.display = 'none';
+      footer.dataset.footerHidden = 'true';
+    }
+    
+    // player-container와 그 부모에 height: 100% 적용
+    if (playerContainer) {
+      playerContainer.style.height = '100%';
+      playerContainer.dataset.heightApplied = 'true';
+      
+      const parent = playerContainer.parentElement;
+      if (parent) {
+        parent.style.height = '100%';
+        parent.dataset.heightApplied = 'true';
+      }
+    }
+  } else {
+    // Footer 표시하기 (원상복구)
+    if (footer && footer.dataset.footerHidden) {
+      footer.style.display = '';
+      delete footer.dataset.footerHidden;
+    }
+    
+    // height 스타일 제거
+    if (playerContainer && playerContainer.dataset.heightApplied) {
+      playerContainer.style.height = '';
+      delete playerContainer.dataset.heightApplied;
+      
+      const parent = playerContainer.parentElement;
+      if (parent && parent.dataset.heightApplied) {
+        parent.style.height = '';
+        delete parent.dataset.heightApplied;
+      }
+    }
+  }
 }
 
 // 스타일 제거 함수
@@ -45,6 +94,7 @@ function removeStyles() {
       video.style.position = '';
       video.style.left = '';
       video.style.top = '';
+      video.style.transform = '';
       video.style.width = '';
       video.style.height = '';
       delete video.dataset.enlargerApplied;
@@ -58,6 +108,9 @@ function removeStyles() {
       delete container.dataset.paddingApplied;
     }
   });
+  
+  // Footer 관련 스타일도 제거
+  applyFooterVisibility(false);
   
   console.log('Inflearn Video Enlarger: Styles removed');
 }

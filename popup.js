@@ -1,7 +1,8 @@
 // 기본 설정값
 const DEFAULT_SETTINGS = {
   enabled: true,
-  zoomLevel: 105
+  zoomLevel: 105,
+  hideFooter: true
 };
 
 // 설정 로드
@@ -10,6 +11,7 @@ function loadSettings() {
     document.getElementById('enableToggle').checked = settings.enabled;
     document.getElementById('zoomSlider').value = settings.zoomLevel;
     document.getElementById('zoomValue').textContent = settings.zoomLevel + '%';
+    document.getElementById('hideFooterToggle').checked = settings.hideFooter;
   });
 }
 
@@ -17,8 +19,9 @@ function loadSettings() {
 function saveSettings() {
   const enabled = document.getElementById('enableToggle').checked;
   const zoomLevel = parseInt(document.getElementById('zoomSlider').value);
+  const hideFooter = document.getElementById('hideFooterToggle').checked;
   
-  const settings = { enabled, zoomLevel };
+  const settings = { enabled, zoomLevel, hideFooter };
   
   chrome.storage.sync.set(settings, () => {
     // 상태 메시지 표시
@@ -50,6 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // 활성화 토글
   document.getElementById('enableToggle').addEventListener('change', saveSettings);
+  
+  // Footer 숨김 토글
+  document.getElementById('hideFooterToggle').addEventListener('change', saveSettings);
   
   // 확대율 슬라이더
   const zoomSlider = document.getElementById('zoomSlider');
