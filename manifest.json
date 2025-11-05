@@ -3,10 +3,14 @@
   "name": "Inflearn Video Enlarger",
   "version": "1.0.0",
   "description": "Enlarges video player on Inflearn lecture pages",
-  "permissions": [],
+  "permissions": ["storage"],
   "host_permissions": [
     "*://*.inflearn.com/*"
   ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Inflearn Video Enlarger Settings"
+  },
   "content_scripts": [
     {
       "matches": [
