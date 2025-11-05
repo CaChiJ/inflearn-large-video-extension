@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Inflearn Video Enlarger",
+  "version": "1.0.0",
+  "description": "Enlarges video player on Inflearn lecture pages",
+  "permissions": [],
+  "host_permissions": [
+    "*://*.inflearn.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.inflearn.com/courses/lecture*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
